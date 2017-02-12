@@ -1,4 +1,4 @@
-$('document').ready(function() {
+$('#myCanvas2').ready(function() {
 	
 	// ----------------------------------------------------------------
 	// -------------------------- PHYSICS -----------------------------
@@ -18,12 +18,10 @@ $('document').ready(function() {
 		meta: false,
 		autoResize: false,
 		styles: {
-        'rectangle' : {
-            strokeStyle: 'rgba(0,0,0,1)',
-            lineWidth: 1,
-            fillStyle: 'rgba(0,0,0,1)',
-            angleIndicator: 'rgba(0,0,0,1)'
-        }
+			strokeStyle: 'rgba(0,0,0,1)',
+			lineWidth: 1,
+			fillStyle: 'rgba(0,0,0,1)',
+			angleIndicator: 'rgba(0,0,0,1)'
     	}
 	});
 	
@@ -69,7 +67,7 @@ $('document').ready(function() {
 	//watermark
 	ctx.font = "20px Georgia";
 	ctx.fillStyle = "rgba(0,0,0,0.5)";
-	ctx.fillText("Sam Nayerman",450, 580);
+	ctx.fillText("Sam Nayerman",250, 250);
 	ctx.fillStyle = "rgba(0,0,0,1)";
 	
 	//currently drawn shapes on canvas
@@ -77,15 +75,47 @@ $('document').ready(function() {
 	var squares = [];
 	var circles = [];
 	var triangles = [];
+	var lines = [];
+
+	var tmpPoint1;
+	var tmpPoint2;
 	
 	var activeTool = $('#menuLeft').find('.active').attr('id');
 	
 	$('#myCanvas2').mousemove(function(e) {
 		activeTool = $('#menuLeft').find('.active').attr('id');
+		
+		if(activeTool==="line" && tmpPoint1 != null && e.buttons == 1) {
+			$('#myCanvas2').on('click',function(e) {
+				tmpPoint2 = {x: getMousePos(canvas,e).x, y: getMousePos(canvas,e).y};
+			});
+
+			$('#myCanvas2').off('click');
+
+			tmpPoint2 = tmpPoint2 == null ? {x: getMousePos(canvas,e).x, y: getMousePos(canvas,e).y} : tmpPoint2;
+
+			var newLine = new Line(tmpPoint1.x, tmpPoint2.x, tmpPoint1.y, tmpPoint2.y);
+
+			var a = newLine.x1 - newLine.x2
+			var b = newLine.y1 - newLine.y2
+
+			var c = Math.sqrt( a*a + b*b );
+			
+			var rect = Physics.body('rectangle', {
+				x: newLine.x1,
+				y: newLine.y1,
+				width: c,
+				height: 3
+			});
+			lines.push(rect);
+			world.add(rect);
+
+			return;
+		}
 	});
 	
 	$('#myCanvas2').mousedown(function(e) {
-		$('#menuLeft').find('.active').removeClass('active');
+		//$('#menuLeft').find('.active').removeClass('active');
 
 		if(activeTool==="square") {
 			var newSquare = new Square(getMousePos(canvas,e).x, getMousePos(canvas,e).y, 100);
@@ -120,13 +150,16 @@ $('document').ready(function() {
 				restitution: 0.1,
 				vertices: [
 					{x: 0, y: 0},
-					{x: sideLen/2, y: (Math.sin(60)*sideLen*2)},
+					{x: sideLen/2, y: -(Math.sin(60*180/Math.PI)*sideLen)},
 					{x: sideLen, y: 0}
 				]
 			});
 			triangles.push(triangle);
 			world.add(triangle);
-		} else {
+		} else if(activeTool==="line") {
+			var pt1 = {x: getMousePos(canvas,e).x, y: getMousePos(canvas,e).y};
+			tmpPoint1 = pt1;
+
 		}
 	});
 
