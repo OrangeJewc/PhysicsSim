@@ -84,6 +84,8 @@ $('document').ready(function() {
 	});
 	
 	$('#myCanvas2').mousedown(function(e) {
+		$('#menuLeft').find('.active').removeClass('active');
+
 		if(activeTool==="square") {
 			var newSquare = new Square(getMousePos(canvas,e).x, getMousePos(canvas,e).y, 100);
 			
