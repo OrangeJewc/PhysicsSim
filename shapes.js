@@ -10,7 +10,9 @@ function Circle(x, y, radius) {
 	this.radius = radius;
 }
 
-function Triangle(x, y, radius) {
-	
+function Triangle(x, y, side) {
+	this.x = x;
+	this.y = y;
+	this.side = side;
 }
 

@@ -73,6 +73,7 @@ $('document').ready(function() {
 	ctx.fillStyle = "rgba(0,0,0,1)";
 	
 	//currently drawn shapes on canvas
+	//position at _sleepPosMean
 	var squares = [];
 	var circles = [];
 	var triangles = [];
@@ -110,7 +111,21 @@ $('document').ready(function() {
 			world.add(circ);
 			
 		} else if(activeTool==="triangle") {
-			
+			var sideLen = 100;
+			var newTriangle = new Triangle(getMousePos(canvas,e).x, getMousePos(canvas,e).y, sideLen);
+
+			var triangle = Physics.body('convex-polygon', {
+				x: newTriangle.x,
+				y: newTriangle.y,
+				restitution: 0.1,
+				vertices: [
+					{x: 0, y: 0},
+					{x: sideLen/2, y: (Math.sin(60)*sideLen*2)},
+					{x: sideLen, y: 0}
+				]
+			});
+			triangles.push(triangle);
+			world.add(triangle);
 		} else {
 		}
 	});
