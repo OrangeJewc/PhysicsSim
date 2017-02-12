@@ -84,14 +84,14 @@ $('#myCanvas2').ready(function() {
 	
 	$('#myCanvas2').mousemove(function(e) {
 		activeTool = $('#menuLeft').find('.active').attr('id');
-		
+
 		if(activeTool==="line" && tmpPoint1 != null && e.buttons == 1) {
 			$('#myCanvas2').on('click',function(e) {
 				tmpPoint2 = {x: getMousePos(canvas,e).x, y: getMousePos(canvas,e).y};
 			});
 
 			$('#myCanvas2').off('click');
-
+			console.log(tmpPoint2);
 			tmpPoint2 = tmpPoint2 == null ? {x: getMousePos(canvas,e).x, y: getMousePos(canvas,e).y} : tmpPoint2;
 
 			var newLine = new Line(tmpPoint1.x, tmpPoint2.x, tmpPoint1.y, tmpPoint2.y);
@@ -109,8 +109,7 @@ $('#myCanvas2').ready(function() {
 			});
 			lines.push(rect);
 			world.add(rect);
-
-			return;
+			tmpPoint2 = null;
 		}
 	});
 	
